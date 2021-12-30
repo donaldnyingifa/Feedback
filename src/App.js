@@ -1,39 +1,44 @@
-import React from "react";
 import { useState } from "react";
-
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
+import { FeedbackProvider } from "./context/FeedbackContext";
 import Header from "./components/Header";
 import Feedbacklist from "./components/Feedbacklist";
-import FeedbackData from "./data/FeedbackData";
 import Feedbackstats from "./components/Feedbackstats";
 import FeedbackForm from "./components/FeedbackForm";
+import AboutPage from "./pages/AboutPage";
+import AboutIconLink from "./components/AboutIconLink";
 
 function App() {
-  const [feedback, setFeedback] =
-    useState(FeedbackData);
-
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete?"
-      )
-    ) {
-      setFeedback(
-        feedback.filter((item) => item.id !== id)
-      );
-    }
-  };
   return (
-    <>
-      <Header text="Feedback Header" />
-      <div className="container">
-        <FeedbackForm />
-        <Feedbackstats feedback={feedback} />
-        <Feedbacklist
-          feedback={feedback}
-          onDelete={handleDelete}
-        />
-      </div>
-    </>
+    <FeedbackProvider>
+      <Router>
+        <Header text="Feedback Header" />
+        <div className="container">
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                <>
+                  <FeedbackForm />
+                  <Feedbackstats />
+                  <Feedbacklist />
+                </>
+              }
+            ></Route>
+            <Route
+              path="/about"
+              element={<AboutPage />}
+            />
+          </Routes>
+          <AboutIconLink />
+        </div>
+      </Router>
+    </FeedbackProvider>
   );
 }
 
